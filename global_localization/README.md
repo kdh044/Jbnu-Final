@@ -15,7 +15,7 @@ rosrun global_localization gps_server.py
 
 
 
-##3 월 13일
+## 3월 13일
 gps_publisher.py및 gps_server.py 추가
 
 자바스크립트 수정
