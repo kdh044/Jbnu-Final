@@ -23,8 +23,9 @@ ROS_NODE_NAME = "gps_server"
 GPS_TOPIC = "gps_data"
 WAYPOINTS_TOPIC = "waypoints"
 
-# 최신 GPS 데이터 저장 (쓰레드 안전)
+# 최신 GPS 데이터 및 Waypoints 저장 (쓰레드 안전)
 latest_gps_data = None
+latest_waypoints = None
 data_lock = threading.Lock()
 
 # ---------------------------
@@ -71,7 +72,7 @@ def start_ros_node():
     rospy.loginfo(f"🚀 ROS 노드 '{ROS_NODE_NAME}' 실행 완료")
 
 # ---------------------------
-# 📌 WebSocket 서버 실행 (포트 충돌 방지 추가)
+# 📌 WebSocket 서버 실행 (GPS 데이터 전송)
 # ---------------------------
 async def send_gps_data(websocket, path):
     """ WebSocket을 통해 웹 클라이언트로 GPS 데이터 전송 """
@@ -97,12 +98,29 @@ async def start_websocket_server():
 # ---------------------------
 async def receive_waypoints(websocket, path):
     """ 웹에서 받은 경로 데이터를 ROS 토픽으로 전송 """
+    global latest_waypoints
     pub = rospy.Publisher(WAYPOINTS_TOPIC, String, queue_size=10)
+
     async for message in websocket:
         try:
             waypoints = json.loads(message)  # JSON 파싱
+            if not isinstance(waypoints, dict) or "waypoints" not in waypoints:
+                rospy.logerr("❌ 잘못된 Waypoints 데이터 형식!")
+                continue
+            
+            with data_lock:
+                latest_waypoints = waypoints
+
+            # 목적지 좌표 포함 확인
+            destination = waypoints.get("destination", None)
+            if destination:
+                rospy.loginfo(f"📍 목적지 좌표 수신: {destination}")
+            else:
+                rospy.logwarn("⚠️ 목적지 좌표 없음")
+
             pub.publish(json.dumps(waypoints))
-            rospy.loginfo(f"🗺️ 웹에서 받은 Waypoints: {waypoints}")
+            rospy.loginfo(f"🗺️ 웹에서 받은 Waypoints & 목적지 데이터: {waypoints}")
+
         except Exception as e:
             rospy.logerr(f"❌ Waypoints 처리 오류: {e}")
 
