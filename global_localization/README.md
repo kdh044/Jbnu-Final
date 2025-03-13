@@ -6,7 +6,7 @@ git add .
 git commit -m "커밋 메시지"
 git push origin main
 
-#3월 12일
+## 3월 12일
 GPS + Waypoint 기능 유지
 Waypoint 일정거리이상(5m)로 다가가면 지나갔다는 판정 -> waypoint 마커 삭제
 ROS 토픽 Publisher + Subscriber 추가
@@ -15,7 +15,7 @@ rosrun global_localization gps_server.py
 
 
 
-##3월 13일
+##3 월 13일
 gps_publisher.py및 gps_server.py 추가
 
 자바스크립트 수정
