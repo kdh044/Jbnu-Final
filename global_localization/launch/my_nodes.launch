@@ -1,0 +1,14 @@
+<launch>
+  <!-- gps_server.py 노드 실행 -->
+  <node pkg="global_localization" type="gps_server.py" name="gps_server" output="screen"/>
+
+  <!-- waypoints_subscriber.py 노드 실행 -->
+  <node pkg="global_localization" type="waypoints_subscriber.py" name="waypoints_subscriber" output="screen"/>
+
+  <!-- waypoints_publisher.py 노드 실행 -->
+  <node pkg="global_localization" type="waypoints_publisher.py" name="waypoints_publisher" output="screen"/>
+
+  <!-- gps_publisher.py 노드 실행 -->
+  <node pkg="global_localization" type="gps_publisher.py" name="gps_publisher" output="screen"/>
+</launch>
+

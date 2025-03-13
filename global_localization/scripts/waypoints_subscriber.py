@@ -1,19 +1,37 @@
 #!/usr/bin/env python3
+
 import rospy
 import json
 from std_msgs.msg import String
 
-def waypoints_callback(msg):
-    waypoints = json.loads(msg.data)
-    rospy.loginfo(f"📍 Waypoints 수신: {waypoints}")
+def callback(data):
+    try:
+        # /waypoints 토픽에서 수신한 메시지를 JSON으로 파싱
+        msg_dict = json.loads(data.data)
 
-    # 로봇이 waypoints를 따라가는 로직 추가 가능
-    for point in waypoints:
-        lat, lon = point['latitude'], point['longitude']
-        rospy.loginfo(f"➡ 이동 좌표: 위도 {lat}, 경도 {lon}")
+        # waypoints 배열 파싱
+        waypoints_list = msg_dict.get("waypoints", [])
+        # 목적지 좌표 파싱
+        destination = msg_dict.get("destination", None)
 
-# ROS 노드 및 서브스크라이버 초기화
-rospy.init_node('waypoint_subscriber', anonymous=True)
-rospy.Subscriber('/waypoints', String, waypoints_callback)
+        # ROS 로그 출력
+        rospy.loginfo(f"🔎 수신한 웨이포인트 개수: {len(waypoints_list)}")
+        if destination:
+            rospy.loginfo(f"📍 목적지: {destination}")
+        else:
+            rospy.loginfo("⚠️ 목적지 좌표 없음")
 
-rospy.spin()  # 노드 실행 유지
+        # 여기서부터는 웨이포인트/목적지 데이터를 원하는 로직에 활용
+        # 예: waypoints_list를 순회하며 주행 제어 등
+
+    except Exception as e:
+        rospy.logerr(f"JSON 파싱 오류: {e}")
+
+def listener():
+    rospy.init_node('waypoints_subscriber', anonymous=True)
+    rospy.Subscriber("waypoints", String, callback)
+    rospy.loginfo("🟢 waypoints_subscriber 노드 시작됨, /waypoints 토픽 구독 중...")
+    rospy.spin()
+
+if __name__ == '__main__':
+    listener()
