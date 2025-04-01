@@ -1,35 +1,45 @@
-# 변경사항  
+# 🌍 Global Path Planner - `global_path_planner`
 
-깃헙 명령어  
+## ✅ 기능 요약
+- GPS + Waypoint 기능 제공
+- 목적지 입력 시, Kakao API를 활용하여 waypoint 리스트 생성
+- Waypoint 도달(5m 이내) 시 자동 삭제
+- ROS Topic 기반의 Publisher/Subscriber 구성
 
-git add .  
-git commit -m "커밋 메시지"  
-git push origin main  
+---
 
-명령어
-rosrun global_localization gps_server.py  
-rosrun global_localization gps_publisher.py  
-rostopic echo waypoints  
+## 📅 작업 이력
 
-roslaunch global_localization my_nodes.launch(한번에 사용가능 but 추천하지 않음)  
+### ✅ 3월 12일
+- `gps_server.py`로 웹 프롬프트 제공
+- Waypoint 접근 시 삭제 로직 구현
+- ROS 토픽 구조 설계 (`/waypoints` 등)
 
+### ✅ 3월 13일
+- `gps_publisher.py` 및 기능 보완
+- 자바스크립트 수정
+  - 목적지 검색창 제거
+  - waypoint 및 목적지 좌표를 ROS 토픽으로 전송
 
-## 3월 12일   
-GPS + Waypoint 기능 유지  
-Waypoint 일정거리이상(5m)로 다가가면 지나갔다는 판정 -> waypoint 마커 삭제  
-ROS 토픽 Publisher + Subscriber 추가  
+---
 
-rosrun global_localization gps_server.py  
+## 🚀 사용 방법
 
+### Step 1. 실행 순서
+```bash
+rosrun global_path_planner gps_server.py
+rosrun global_path_planner gps_publisher.py
+rostopic echo /waypoints
+```
 
+👉 또는, 한 번에 실행하려면:
+```bash
+roslaunch global_path_planner my_nodes.launch
+```
+※ 단, 디버깅을 위해서는 위의 개별 실행을 권장함.
 
-## 3월 13일  
-gps_publisher.py및 gps_server.py 추가  
+---
 
-자바스크립트 수정  
--목적지 검색 창 제거  
--waypoint및 목적지 위도,경도 토픽으로 발행 기능 추가  
-
-gps_server.py로 먼저 웹 프롬포트 띄운 후에 gps_publisher.py 실행하여 gps로 좌표 받아오고 웹페이지에 목적지 찍으면   
-카카오 네비 api를 사용하여 waypoint와 도착지 위도,경도 좌표 ROS topic으로 넘어옴   
-
+## 💡 기타 사항
+- `/waypoints` 토픽을 통해 RViz에서 시각화 가능
+- GPS 수신 기반이라 야외 주행을 위한 기반 기능임
