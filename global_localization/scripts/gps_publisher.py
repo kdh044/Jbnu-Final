@@ -88,8 +88,8 @@ async def send_gps_data(websocket, path):
 
 async def start_websocket_server():
     """ WebSocket 서버 실행 """
-    async with websockets.serve(send_gps_data, "localhost", 8765):
-        rospy.loginfo("🌐 WebSocket 서버 실행: ws://localhost:8765")
+    async with websockets.serve(send_gps_data, "localhost", 8767):
+        rospy.loginfo("🌐 WebSocket 서버 실행: ws://localhost:8767")
         await asyncio.Future()  # 무한 대기
 
 # ---------------------------
