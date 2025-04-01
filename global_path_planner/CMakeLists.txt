@@ -13,9 +13,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-##############################################################
-# ✅ 파이썬 스크립트 설치 설정: scripts/ 폴더 내 스크립트들
-##############################################################
+# Python 노드 설치 설정
 catkin_install_python(
   PROGRAMS
     scripts/gps_server.py
@@ -25,11 +23,8 @@ catkin_install_python(
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-##############################################################
-# ✅ Launch 파일 설치 설정 (my_nodes.launch 등)
-##############################################################
+# launch 파일 설치 설정
 install(FILES
   launch/my_nodes.launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )
-
