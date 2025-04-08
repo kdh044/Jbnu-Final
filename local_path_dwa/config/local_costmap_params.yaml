@@ -1,9 +1,0 @@
-global_frame: odom             # 오도메트리 기준 좌표계
-robot_base_frame: base_link    # 로봇 기준 좌표계
-update_frequency: 5.0          # 업데이트 빈도 (Hz)
-static_map: false              # 정적 맵 사용 안 함
-rolling_window: true           # 로봇 따라가는 창 설정
-width: 3.0                     # costmap 너비 (m)
-height: 3.0                    # costmap 높이 (m)
-resolution: 0.05               # 격자 해상도 (m/grid)
-transform_tolerance: 0.5       # TF 변환 허용 시간 오차
