@@ -1,0 +1,37 @@
+# husky_dwa/config/base_local_planner_params.yaml
+# ────────────────────────────────────────────────
+base_local_planner: dwa_local_planner/DWAPlannerROS   # ← 반드시 선언!
+
+DWAPlannerROS:
+  ## 속도 제한 (m/s, rad/s)
+  max_vel_x:          0.5
+  min_vel_x:          0.0
+  max_vel_theta:      1.0
+  min_vel_theta:     -1.0
+  max_vel_y:          0.0          # 불필요(=0) → 차동구동
+
+  ## 가속도 제한 (m/s², rad/s²)
+  acc_lim_x:          2.5
+  acc_lim_theta:      3.2
+
+  ## 목표 도달 허용 오차
+  xy_goal_tolerance:  0.10   # [m]
+  yaw_goal_tolerance: 0.10   # [rad]
+  latch_xy_goal_tolerance: false
+
+  ## 시뮬레이션 파라미터
+  sim_time:           2.0    # 예측 시간 [s]
+  sim_granularity:    0.025  # 보간 간격 [m]
+  vx_samples:         20
+  vtheta_samples:     40
+  penalize_negative_x: true   # 후진 페널티 부여
+
+  ## 비용 가중치
+  path_distance_bias:     32.0   # 경로 유지
+  goal_distance_bias:     24.0   # 목표 접근
+  occdist_scale:           0.02  # 장애물 멀리
+  obstacle_distance_scaling_factor: 0.20
+  stop_time_buffer:        0.2   # 충돌 여유 [s]
+
+  ## 기타
+  prune_plan:              true

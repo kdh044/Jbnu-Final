@@ -410,23 +410,4 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <!-- Optional for Clearpath internal softwares -->
   <xacro:include filename="$(arg cpr_urdf_extras)" />
 
-  
-
-  <!-- ========== OS1-32 LiDAR Sensor ========== -->
-  <link name="os1_lidar">
-    <visual>
-      <geometry>
-        <cylinder radius="0.05" length="0.08"/>
-      </geometry>
-      <material name="Grey"/>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-    </visual>
-  </link>
-
-  <joint name="os1_lidar_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="os1_lidar"/>
-    <origin xyz="0.2 0 0.5" rpy="0 0 0"/>
-  </joint>
-
 </robot>

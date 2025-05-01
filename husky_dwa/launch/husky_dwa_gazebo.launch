@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- ▲ 0) xacro 옵션: Noetic+ 최신 xacro는 inorder 권장 -->
+  <arg name="xacro_opts" default="--inorder"/>
+
+  <!-- 1) Gazebo 빈 월드 (Playpen) -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name"   value="$(find husky_gazebo)/worlds/clearpath_playpen.world"/>
+    <arg name="paused"       value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui"          value="true"/>
+  </include>
+
+  <!-- 2) URDF(xacro) → /robot_description -->
+  <param name="robot_description"
+         command="$(find xacro)/xacro $(arg xacro_opts) $(find husky_dwa_description)/urdf/husky_os1.urdf.xacro"/>
+
+  <!-- 3) 로봇 스폰 -->
+  <node name="spawn_husky"
+        pkg="gazebo_ros"
+        type="spawn_model"
+        output="screen"
+        args="-urdf -param robot_description -model husky"/>
+
+  <!-- 4) ros_control 파라미터 -->
+  <rosparam file="$(find husky_dwa)/config/ros_controllers.yaml" command="load"/>
+
+  <!-- 5) controller_manager 스포너 (2초 지연) ▲ -->
+  <node pkg="controller_manager"
+        type="spawner"
+        name="controller_spawner"
+        args="joint_state_controller diff_drive_controller"
+        output="screen">
+    <param name="timeout" value="2.0"/>
+  </node>
+
+  <!-- 6) Joint State Publisher (non-GUI) -->
+  <node pkg="joint_state_publisher"
+        type="joint_state_publisher"
+        name="joint_state_publisher">
+    <param name="use_gui" value="false"/>
+  </node>
+
+  <!-- 7) Robot State Publisher -->
+  <node pkg="robot_state_publisher"
+        type="robot_state_publisher"
+        name="robot_state_publisher">
+    <param name="use_sim_time" value="true"/>
+  </node>
+
+  <!-- ▲ 8) gazebo_ros_control 노드 삭제
+       (URDF 안의 <plugin name="gazebo_ros_control">가 대신 로드됨) -->
+
+
+  <!-- 10) teleop_twist_keyboard (터미널 그대로 실행) -->
+  <node pkg="teleop_twist_keyboard"
+        type="teleop_twist_keyboard.py"
+        name="teleop_keyboard"
+        output="screen">
+    <param name="repeat_rate" value="20.0"/>
+    <remap from="cmd_vel" to="/cmd_vel"/>
+  </node>
+
+  <!-- 11) RViz -->
+  <node pkg="rviz"
+        type="rviz"
+        name="rviz"
+        output="screen"
+        args="-d $(find husky_dwa)/rviz/husky_os1.rviz">
+    <param name="use_sim_time" value="true"/>
+  </node>
+
+</launch>

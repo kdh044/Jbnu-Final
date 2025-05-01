@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="use_sim_time" default="true"/>
+
+  <group ns="move_base">
+    <param name="use_sim_time" value="$(arg use_sim_time)"/>
+
+    <rosparam file="$(find husky_dwa)/config/global_costmap_params.yaml"
+              command="load" ns="global_costmap"/>
+    <rosparam file="$(find husky_dwa)/config/local_costmap_params.yaml"
+              command="load" ns="local_costmap"/>
+    <rosparam file="$(find husky_dwa)/config/base_local_planner_params.yaml"
+              command="load"/>
+
+    <node pkg="move_base" type="move_base" name="move_base" output="screen">
+      <!-- map 대신 odom 사용 -->
+      <param name="global_costmap/global_frame" value="odom"/>
+      <param name="local_costmap/global_frame"  value="odom"/>
+      <!-- DWA 명시 (필요 시) -->
+      <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
+    </node>
+  </group>
+</launch>

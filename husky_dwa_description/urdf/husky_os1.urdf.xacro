@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="husky_os1">
+
+  <!-- 1) Husky 기본 모델 포함 -->
+  <xacro:include filename="$(find husky_description)/urdf/husky.urdf.xacro"/>
+  <husky/>
+
+  <!-- 2) OS1-64 LiDAR 모델 포함 -->
+  <xacro:include filename="$(find ouster_description)/urdf/OS1-64.urdf.xacro"/>
+  <xacro:OS1-64
+    parent="top_chassis_link"
+    name="os1"
+    topic_points="/os1/points"
+    topic_imu="/os1/imu"
+    hz="10"
+    lasers="64"
+    samples="512"
+    min_range="0.9"
+    max_range="75.0"
+    noise="0.008"
+    lidar_link="os1_lidar"
+    imu_link="os1_imu"
+    vfov_min="-.26"
+    vfov_max=".26">
+    <origin xyz="0 0 0.3" rpy="0 0 0"/>
+  </xacro:OS1-64>
+
+  <!-- 3) Transmission 매크로 정의 -->
+  <xacro:macro name="wheel_trans" params="JNAME ANAME">
+    <transmission name="${JNAME}_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${JNAME}">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${ANAME}">
+        <mechanicalReduction>1</mechanicalReduction>
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <!-- 4) 4개 바퀴 전부에 Transmission 호출 -->
+  <xacro:wheel_trans JNAME="front_left_wheel_joint"  ANAME="front_left_wheel_motor"/>
+  <xacro:wheel_trans JNAME="front_right_wheel_joint" ANAME="front_right_wheel_motor"/>
+  <xacro:wheel_trans JNAME="rear_left_wheel_joint"   ANAME="rear_left_wheel_motor"/>
+  <xacro:wheel_trans JNAME="rear_right_wheel_joint"  ANAME="rear_right_wheel_motor"/>
+
+  <!-- 5) gazebo_ros_control 플러그인 (ros_controllers.yaml 로딩) -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
+  </gazebo>
+
+  <!-- 6) Gazebo DiffDrive 플러그인 (/cmd_vel → /odom TF) -->
+  <!--    reference를 base_footprint로 맞추어야 조인트를 찾습니다 -->
+  <gazebo reference="base_link">
+    <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+      <robotNamespace>/</robotNamespace>
+
+      <leftJoint>front_left_wheel_joint</leftJoint>
+      <rightJoint>front_right_wheel_joint</rightJoint>
+      <leftBackJoint>rear_left_wheel_joint</leftBackJoint>
+      <rightBackJoint>rear_right_wheel_joint</rightBackJoint>
+
+      <cmdTopic>/cmd_vel</cmdTopic>
+      <odometryTopic>/odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
+
+      <wheelSeparation>0.57</wheelSeparation>
+      <wheelDiameter>0.33</wheelDiameter>
+      <updateRate>50.0</updateRate>
+    </plugin>
+  </gazebo>
+
+</robot>
