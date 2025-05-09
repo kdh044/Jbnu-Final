@@ -28,21 +28,9 @@
   <!-- Husky navigation (mapless) -->
   <include file="$(find husky_navigation)/launch/move_base_mapless_demo.launch" />
 
-  <!-- Joint State Publisher -->
-  <node pkg="joint_state_publisher"
-        type="joint_state_publisher"
-        name="joint_state_publisher">
-    <param name="use_gui" value="false"/>
-  </node>
+  <!-- Joint State Publisher  two delet  -->
 
   <!-- Teleop Keyboard -->
-  <node pkg="teleop_twist_keyboard"
-        type="teleop_twist_keyboard.py"
-        name="teleop_keyboard"
-        output="screen">
-    <param name="repeat_rate" value="20.0"/>
-    <remap from="cmd_vel" to="/cmd_vel"/>
-  </node>
 
   <!-- RViz -->
   <node pkg="rviz"
@@ -71,14 +59,6 @@
     <remap from="cloud_in" to="/os1/points"/>
     <remap from="scan"     to="/scan"/>
   </node>
-
-  <node pkg="robot_localization"
-      type="ekf_localization_node"
-      name="ekf_localization_node"
-      output="screen">
-  <rosparam command="load" file="$(find husky_control)/config/localization.yaml" />
-  <remap from="odometry/filtered" to="/odom"/>
-</node>
 
 
 </launch>

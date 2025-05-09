@@ -75,11 +75,12 @@ rostopic echo waypoints
 - RL-DWA 기반
 
 ### 📍 Localization
-명령어(0502 수정중)
-point cloud및 모델 불러오기까진 성공 ,dwa 진행중
-roslaunch husky_dwa husky_dwa_gazebo.launch
-roslaunch husky_dwa move_base.launch
-
+명령어(0502 수정중)     
+point cloud및 모델 불러오기까진 성공 ,dwa 진행중        
+```bash
+roslaunch husky_dwa husky_dwa_gazebo.launch        
+roslaunch husky_dwa move_base.launch    
+```
 ---
 
 ## 🗂️ 맵 정보 (최상위 디렉토리 기준)
