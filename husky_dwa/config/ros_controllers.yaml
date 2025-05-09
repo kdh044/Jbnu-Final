@@ -9,8 +9,8 @@ diff_drive_controller:
   type: diff_drive_controller/DiffDriveController
 
   # 바퀴 조인트
-  left_wheel:  ['front_left_wheel_joint',  'rear_left_wheel_joint']
-  right_wheel: ['front_right_wheel_joint', 'rear_right_wheel_joint']
+  left_wheel:  ['front_left_wheel',  'rear_left_wheel']
+  right_wheel: ['front_right_wheel', 'rear_right_wheel']
 
   # 물리 파라미터
   wheel_separation: 0.57
@@ -23,15 +23,10 @@ diff_drive_controller:
   publish_rate:   50
   cmd_vel_timeout: 0.25
 
-  # 간단 PID (Effort interface → 필수)
-  # 네 바퀴 모두 동일 게인 예시
-  left_wheel_pid:  {p: 50.0, i: 0.0, d: 0.5}
-  right_wheel_pid: {p: 50.0, i: 0.0, d: 0.5}
+gazebo_ros_control:
+  pid_gains:
+    front_left_wheel: {p: 10.0, i: 0.01, d: 0.1}
+    front_right_wheel: {p: 10.0, i: 0.01, d: 0.1}
+    rear_left_wheel: {p: 10.0, i: 0.01, d: 0.1}
+    rear_right_wheel: {p: 10.0, i: 0.01, d: 0.1}
 
-############################################
-# (선택) 개별 JointVelocityController 예시 #
-############################################
-#front_left_wheel_controller:
-#  type: effort_controllers/JointVelocityController
-#  joint: front_left_wheel_joint
-#  pid: {p: 50.0, i: 0.0, d: 0.5}

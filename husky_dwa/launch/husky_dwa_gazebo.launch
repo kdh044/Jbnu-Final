@@ -1,10 +1,9 @@
-<?xml version="1.0"?>
 <launch>
 
-  <!-- ▲ 0) xacro 옵션: Noetic+ 최신 xacro는 inorder 권장 -->
+  <!-- 0) xacro 옵션 -->
   <arg name="xacro_opts" default="--inorder"/>
 
-  <!-- 1) Gazebo 빈 월드 (Playpen) -->
+  <!-- 1) Gazebo 빈 월드 -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name"   value="$(find husky_gazebo)/worlds/clearpath_playpen.world"/>
     <arg name="paused"       value="false"/>
@@ -23,37 +22,20 @@
         output="screen"
         args="-urdf -param robot_description -model husky"/>
 
-  <!-- 4) ros_control 파라미터 -->
-  <rosparam file="$(find husky_dwa)/config/ros_controllers.yaml" command="load"/>
+  <!-- Husky control -->
+  <include file="$(find husky_control)/launch/control.launch" />
 
-  <!-- 5) controller_manager 스포너 (2초 지연) ▲ -->
-  <node pkg="controller_manager"
-        type="spawner"
-        name="controller_spawner"
-        args="joint_state_controller diff_drive_controller"
-        output="screen">
-    <param name="timeout" value="2.0"/>
-  </node>
+  <!-- Husky navigation (mapless) -->
+  <include file="$(find husky_navigation)/launch/move_base_mapless_demo.launch" />
 
-  <!-- 6) Joint State Publisher (non-GUI) -->
+  <!-- Joint State Publisher -->
   <node pkg="joint_state_publisher"
         type="joint_state_publisher"
         name="joint_state_publisher">
     <param name="use_gui" value="false"/>
   </node>
 
-  <!-- 7) Robot State Publisher -->
-  <node pkg="robot_state_publisher"
-        type="robot_state_publisher"
-        name="robot_state_publisher">
-    <param name="use_sim_time" value="true"/>
-  </node>
-
-  <!-- ▲ 8) gazebo_ros_control 노드 삭제
-       (URDF 안의 <plugin name="gazebo_ros_control">가 대신 로드됨) -->
-
-
-  <!-- 10) teleop_twist_keyboard (터미널 그대로 실행) -->
+  <!-- Teleop Keyboard -->
   <node pkg="teleop_twist_keyboard"
         type="teleop_twist_keyboard.py"
         name="teleop_keyboard"
@@ -62,7 +44,7 @@
     <remap from="cmd_vel" to="/cmd_vel"/>
   </node>
 
-  <!-- 11) RViz -->
+  <!-- RViz -->
   <node pkg="rviz"
         type="rviz"
         name="rviz"
@@ -70,5 +52,33 @@
         args="-d $(find husky_dwa)/rviz/husky_os1.rviz">
     <param name="use_sim_time" value="true"/>
   </node>
+
+  <!-- PointCloud→LaserScan: 여기서만 /scan 으로 remap -->
+  <node pkg="pointcloud_to_laserscan"
+        type="pointcloud_to_laserscan_node"
+        name="pc2_to_scan"
+        output="screen">
+    <param name="target_frame"        value="base_link"/>
+    <param name="transform_tolerance" value="0.01"/>
+    <param name="min_height"          value="0.0"/>
+    <param name="max_height"          value="2.0"/>
+    <param name="angle_min"           value="-3.14"/>
+    <param name="angle_max"           value="3.14"/>
+    <param name="angle_increment"     value="0.0087"/>
+    <param name="scan_time"           value="0.1"/>
+    <param name="range_min"           value="0.1"/>
+    <param name="range_max"           value="30.0"/>
+    <remap from="cloud_in" to="/os1/points"/>
+    <remap from="scan"     to="/scan"/>
+  </node>
+
+  <node pkg="robot_localization"
+      type="ekf_localization_node"
+      name="ekf_localization_node"
+      output="screen">
+  <rosparam command="load" file="$(find husky_control)/config/localization.yaml" />
+  <remap from="odometry/filtered" to="/odom"/>
+</node>
+
 
 </launch>
