@@ -30,14 +30,14 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
   <xacro:arg name="imu_parent"  default="$(optenv HUSKY_IMU_PARENT base_link)"/>
 
   <!-- 2) OS1-64 LiDAR 모델 포함 -->
-  <xacro:include filename="$(find ouster_description)/urdf/OS1-64.urdf.xacro"/>
-  <xacro:OS1-64
+  <xacro:include filename="$(find ouster_description)/urdf/OS1-32.urdf.xacro"/>
+  <xacro:OS1-32
     parent="top_chassis_link"
     name="os1"
     topic_points="/os1/points"
     topic_imu="/os1/imu"
     hz="10"
-    lasers="64"
+    lasers="32"
     samples="512"
     min_range="0.9"
     max_range="75.0"
@@ -47,7 +47,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     vfov_min="-.26"
     vfov_max=".26">
     <origin xyz="0 0 0.3" rpy="0 0 0"/>
-  </xacro:OS1-64>
+  </xacro:OS1-32>
 
   <!-- LMS1XX Laser Primary and Secondary -->
   <xacro:arg name="laser_enabled"           default="$(optenv HUSKY_LMS1XX_ENABLED 0)" />

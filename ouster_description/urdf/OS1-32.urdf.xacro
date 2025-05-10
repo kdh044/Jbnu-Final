@@ -82,7 +82,7 @@
 
     <!-- Gazebo requires the ouster_gazebo_plugins package -->
     <gazebo reference="${name}">
-        <sensor type="ray" name="${name}-OS1-32">
+        <sensor type="gpu_ray" name="${name}-OS1-32">
           <pose>0 0 0 0 0 0</pose>
           <visualize>false</visualize>
           <update_rate>${hz}</update_rate>
@@ -107,7 +107,7 @@
               <resolution>0.03</resolution>
             </range>
           </ray>
-          <plugin name="gazebo_ros_laser_controller" filename="libgazebo_ros_ouster_laser.so">
+          <plugin name="gazebo_ros_laser_controller" filename="libgazebo_ros_ouster_gpu_laser.so">
             <topicName>${topic_points}</topicName>
             <frameName>${lidar_link}</frameName>
             <min_range>${min_range}</min_range>

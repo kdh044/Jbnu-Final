@@ -37,7 +37,7 @@
 
 // Use the same source code for CPU and GPU plugins
 #ifndef GAZEBO_GPU_RAY
-#define GAZEBO_GPU_RAY 0
+#define GAZEBO_GPU_RAY 1
 #endif
 
 // Custom Callback Queue

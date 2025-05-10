@@ -59,6 +59,6 @@
     <remap from="cloud_in" to="/os1/points"/>
     <remap from="scan"     to="/scan"/>
   </node>
-
+  
 
 </launch>
