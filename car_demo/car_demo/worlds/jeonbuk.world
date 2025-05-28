@@ -1,0 +1,72 @@
+<world name="jeonbuk">
+  <include>
+    <uri>model://sun</uri>
+  </include>
+
+  <!-- 지면 -->
+  <model name="ground_plane">
+    <static>true</static>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 100</size>
+          </plane>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 100</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Gray</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+  </model>
+
+  <!-- 전북대 도로 구조 (예시) -->
+  <model name="jbnu_road">
+    <static>true</static>
+    <pose>0 0 0.05 0 0 0</pose>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <box><size>60 6 0.1</size></box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box><size>60 6 0.1</size></box>
+        </geometry>
+        <material><script><name>Gazebo/Black</name></script></material>
+      </visual>
+    </link>
+  </model>
+
+  <!-- 벽 또는 건물 경계 -->
+  <model name="building_block">
+    <static>true</static>
+    <pose>30 0 1 0 0 0</pose>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <box><size>10 1 2</size></box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box><size>10 1 2</size></box>
+        </geometry>
+        <material><script><name>Gazebo/Red</name></script></material>
+      </visual>
+    </link>
+  </model>
+</world>
