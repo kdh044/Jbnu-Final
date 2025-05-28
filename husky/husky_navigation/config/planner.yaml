@@ -7,13 +7,13 @@ NavfnROS:
 
 TrajectoryPlannerROS:
   # Robot Configuration Parameters
-  acc_lim_x: 2.5
-  acc_lim_theta:  3.2
+  acc_lim_x: 90
+  acc_lim_theta:  10.0
 
-  max_vel_x: 1.0
+  max_vel_x: 120.0
   min_vel_x: -1.0
 
-  max_vel_theta: 1.0
+  max_vel_theta: 20.0
   min_vel_theta: -1.0
   min_in_place_vel_theta: 0.2
 
@@ -54,18 +54,19 @@ TrajectoryPlannerROS:
 
 DWAPlannerROS:
   # Robot configuration parameters  
-  acc_lim_x: 2.5
+  acc_lim_x: 60.0
   acc_lim_y: 0
-  acc_lim_th: 3.2
+  acc_lim_th: 12.0
 
-  max_vel_x: 1.0
-  min_vel_x: 0.2
+
+  max_vel_x: 120.0
+  min_vel_x: -2.0
   max_vel_y: 0
   min_vel_y: 0
 
-  max_vel_trans: 0.5
-  min_vel_trans: 0.1
-  max_vel_rot: 1.0
+  max_vel_trans: 120.0
+  min_vel_trans: -2.0
+  max_vel_rot: 2.0
   min_vel_rot: 0.2
   penalize_negative_x: false
 
@@ -73,13 +74,8 @@ DWAPlannerROS:
   yaw_goal_tolerance: 0.3
   xy_goal_tolerance: 0.3
   latch_xy_goal_tolerance: false
-  path_distance_bias: 12.0 # The weighting for how much the controller should stay close to the path it was given
-  goal_distance_bias: 16.0 # The weighting for how much the controller should attempt to reach its local goal, also controls speed
-  occdist_scale: 1.0 # The weighting for how much the controller should attempt to avoid obstacles
-  sim_time: 2.0
-  sim_granularity: 0.025
-  vx_samples: 20
-  vtheta_samples: 40
+  
+
 
 
   # # Trajectory scoring parameters

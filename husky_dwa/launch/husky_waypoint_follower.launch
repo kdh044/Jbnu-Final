@@ -1,47 +1,30 @@
 <launch>
 
-  <!-- 0) xacro 옵션 -->
-  <arg name="xacro_opts" default="--inorder"/>
+  <!-- 1. geo_planner.launch 포함 (OSM 지도 시각화 + RViz + waypoint 처리) -->
+  <include file="$(find osm_cartography)/launch/geo_planner.launch" />
 
-  <!-- 1) Gazebo 빈 월드 -->
+  <!-- 2. Gazebo 빈 월드 실행 -->
+  <arg name="xacro_opts" default="--inorder"/>
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find car_demo)/worlds/citysim_gazebo9.world"/>
-    <arg name="paused"       value="false"/>
+    <arg name="world_name" value="$(find gazebo_ros)/worlds/empty.world"/>  <!-- 또는 다른 맵 -->
+    <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
-    <arg name="gui"          value="true"/>
+    <arg name="gui" value="true"/>
   </include>
 
-  <!-- 2) URDF(xacro) → /robot_description -->
+  <!-- URDF → /robot_description 등록 -->
   <param name="robot_description"
          command="$(find xacro)/xacro $(arg xacro_opts) $(find husky_dwa_description)/urdf/husky_os1.urdf.xacro"/>
 
-  <!-- 3) 로봇 스폰 -->
+  <!-- Husky 로봇을 Gazebo에 spawn -->
   <node name="spawn_husky"
-      pkg="gazebo_ros"
-      type="spawn_model"
-      output="screen"
-      args="-urdf -param robot_description -model husky -x 0 -y 0 -z 0" />
+        pkg="gazebo_ros"
+        type="spawn_model"
+        output="screen"
+        args="-urdf -param robot_description -model husky -x 0 -y 0 -z 0" />
 
-  <!-- Husky control -->
-  <include file="$(find husky_control)/launch/control.launch" />
-
-  <!-- Husky navigation (mapless) -->
   <include file="$(find husky_navigation)/launch/move_base_mapless_demo.launch" />
 
-  <!-- Joint State Publisher  two delet  -->
-
-  <!-- Teleop Keyboard -->
-
-  <!-- RViz -->
-  <node pkg="rviz"
-        type="rviz"
-        name="rviz"
-        output="screen"
-        args="-d $(find husky_dwa)/rviz/husky_os1.rviz">
-    <param name="use_sim_time" value="true"/>
-  </node>
-
-  <!-- PointCloud→LaserScan: 여기서만 /scan 으로 remap -->
   <node pkg="pointcloud_to_laserscan"
         type="pointcloud_to_laserscan_node"
         name="pc2_to_scan"
@@ -60,13 +43,14 @@
     <remap from="scan"     to="/scan"/>
   </node>
 
-  <!-- 로봇 상태 발행 -->
-  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/>
+  <!-- Husky 제어 노드 -->
+  <include file="$(find husky_control)/launch/control.launch" />
 
-  <!-- EKF + NavSat -->
+  <!-- 상태 퍼블리셔 -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+
   <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization_node" output="screen">
     <rosparam command="load" file="$(find husky_control)/config/localization.yaml"/>
     <param name="publish_tf" value="true"/> 
   </node>
-
 </launch>

@@ -13,3 +13,9 @@ endif()
 install(DIRECTORY config launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
+
+
+install(PROGRAMS
+  scripts/gps_covariance_relay.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)

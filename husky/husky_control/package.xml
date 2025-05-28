@@ -32,6 +32,9 @@
   <run_depend>teleop_twist_joy</run_depend>
   <run_depend>teleop_twist_keyboard</run_depend>
   <run_depend>twist_mux</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+
 
   <export>
   </export>

@@ -12,8 +12,8 @@ global_costmap:
   # 크기·해상도
   rolling_window:    true   # <- 맵리스이므로 rolling window
   static_map:        false  # <- SLAM/정적맵 사용 안 함
-  width:             10.0
-  height:            10.0
+  width:             30.0
+  height:            30.0
   resolution:        0.05   # [m]
 
   # 레이어 구성 (Obstacle + Inflation 두 개면 충분)

@@ -17,9 +17,8 @@ include_directories(
 catkin_install_python(
   PROGRAMS
     scripts/gps_server.py
-    scripts/waypoints_subscriber.py
-    scripts/waypoints_publisher.py
     scripts/gps_publisher.py
+    scripts/path_visualizer.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

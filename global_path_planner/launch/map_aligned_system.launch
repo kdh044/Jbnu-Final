@@ -1,0 +1,19 @@
+<launch>
+  <!-- 1. 시간 동기화 설정 -->
+  <param name="use_sim_time" value="true"/>
+
+  <!-- 2. rosbag 파일 재생 -->
+  <node pkg="rosbag" type="play" name="rosbag_play" args="--clock /media/danny/DB/JBNU_LIDAR_DATASET_EVAL/2025-01-11-12-05-15.bag" />
+
+  <!-- 3. static transform 설정 -->
+  <node pkg="tf" type="static_transform_publisher" name="map_to_init_tf"
+        args="-331596.90 -3968474.29 0 0 0 -1.5899 1 local_map camera_init 100" />
+
+  <!-- 4. FasterLIO 실행 -->
+  <include file="$(find faster_lio)/launch/mapping_ouster32.launch" />
+
+
+  <!-- 5. gps_server 실행 (웹 기반 waypoint 시각화 및 통신 포함) -->
+  <node pkg="global_localization" type="gps_server.py" name="gps_server" output="screen" />
+
+</launch>

@@ -49,6 +49,25 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     <origin xyz="0 0 0.6" rpy="0 0 0"/>
   </xacro:OS1-32>
 
+
+    <!-- GPS Link -->
+  <link name="gps_link">
+    <visual>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+      <material name="Blue">
+        <color rgba="0 0 1 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="gps_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="gps_link"/>
+    <origin xyz="0 0 1.0" rpy="0 0 0"/>
+  </joint>
+
   <!-- LMS1XX Laser Primary and Secondary -->
   <xacro:arg name="laser_enabled"           default="$(optenv HUSKY_LMS1XX_ENABLED 0)" />
   <xacro:arg name="laser_topic"             default="$(optenv HUSKY_LMS1XX_TOPIC front/scan)"/>
@@ -408,26 +427,34 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
     </plugin>
   </gazebo>
 
-  <gazebo>
-    <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
-      <robotNamespace>$(arg robot_namespace)</robotNamespace>
-      <updateRate>40</updateRate>
-      <bodyName>base_link</bodyName>
-      <frameId>base_link</frameId>
-      <topicName>navsat/fix</topicName>
-      <velocityTopicName>navsat/vel</velocityTopicName>
-      <referenceLatitude>$(optenv GAZEBO_WORLD_LAT 49.9)</referenceLatitude>
-      <referenceLongitude>$(optenv GAZEBO_WORLD_LON 8.9)</referenceLongitude>
-      <referenceHeading>90</referenceHeading>
-      <referenceAltitude>0</referenceAltitude>
-      <drift>0.0001 0.0001 0.0001</drift>
-    </plugin>
-  </gazebo>
-
   <!-- Optional custom includes. -->
   <xacro:include filename="$(arg urdf_extras)" />
 
   <!-- Optional for Clearpath internal softwares -->
   <xacro:include filename="$(arg cpr_urdf_extras)" />
+
+    <!-- Gazebo GPS Sensor (Hector plugin) -->
+    <gazebo>
+      <plugin name="gps_plugin" filename="libhector_gazebo_ros_gps.so">
+        <bodyName>gps_link</bodyName>
+        <frameId>gps_link</frameId>
+        <topicName>/gps/fix</topicName>
+        <velocityTopicName>/gps/fix_velocity</velocityTopicName>
+    
+        <!-- 필수 참조 위치 (현실 위도/경도 기준) -->
+        <referenceLatitude>35.8475</referenceLatitude>
+        <referenceLongitude>127.1290</referenceLongitude>
+        <referenceAltitude>50.0</referenceAltitude>
+        <referenceHeading>0.0</referenceHeading>
+    
+        <!-- 토픽이 나오게 만드는 핵심 요소 -->
+        <status>0</status>
+        <service>1</service>
+    
+        <!-- 센서 속도 (10Hz = 100ms) -->
+        <updateRate>10</updateRate>
+      </plugin>
+    </gazebo>
+  
 
 </robot>
