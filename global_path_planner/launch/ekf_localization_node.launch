@@ -1,0 +1,15 @@
+<launch>
+    <!-- EKF에서 Odometry 소스를 /Odometry_fixed로 사용하게 remap -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization_node" output="screen" clear_params="true">
+        <rosparam command="load" file="$(find global_localization)/launch/ekf.yaml" />
+        <remap from="odometry/filtered" to="/odometry/filtered"/>
+        <remap from="odom0" to="/Odometry_fixed"/>
+    </node>
+    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" output="screen">
+        <param name="magnetic_declination_radians" value="0.0"/>
+        <param name="yaw_offset" value="여기에 자기계로 계산한 초기 heading 라디안"/>
+        <remap from="imu" to="/ouster/imu"/>
+        <remap from="gps/fix" to="/ublox/fix"/>
+        <remap from="odom" to="/Odometry_fixed"/>
+    </node>
+</launch>

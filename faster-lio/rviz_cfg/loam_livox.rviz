@@ -7,14 +7,12 @@ Panels:
         - /Global Options1
         - /mapping1
         - /mapping1/current_scan1
-        - /mapping1/current_scan1/Status1
         - /mapping1/history_scan1/Autocompute Value Bounds1
         - /Odometry1/Odometry1
         - /Odometry1/Odometry1/Shape1
         - /Odometry1/Odometry1/Covariance1
         - /Odometry1/Odometry1/Covariance1/Position1
         - /Odometry1/Odometry1/Covariance1/Orientation1
-        - /Path1/Status1
         - /MarkerArray1/Namespaces1
       Splitter Ratio: 0.6432291865348816
     Tree Height: 777
@@ -324,11 +322,28 @@ Visualization Manager:
         {}
       Queue Size: 100
       Value: false
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /fasterlio_path
+      Name: Marker
+      Namespaces:
+        fasterlio_path: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /global_waypoints
+      Name: Marker
+      Namespaces:
+        global_waypoints_cubes: true
+        global_waypoints_line: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 0; 0; 0
     Default Light: true
-    Fixed Frame: camera_init
+    Fixed Frame: map
     Frame Rate: 10
   Name: root
   Tools:
