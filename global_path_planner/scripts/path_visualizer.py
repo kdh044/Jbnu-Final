@@ -20,7 +20,7 @@ class SimplifiedPathVisualizer:
         rospy.init_node('simplified_path_visualizer', anonymous=True)
         
         # Configuration
-        self.bag_file = "/media/danny/DB/JBNU_LIDAR_DATASET_EVAL/2025-01-11-11-55-34.bag"
+        self.bag_file = "/media/danny/DB/JBNU_LIDAR_DATASET_EVAL/2025-01-11-11-29-38.bag"
         
         # GPS origin from bag file
         self.gps_origin = None  # {"lat": ..., "lon": ...}
